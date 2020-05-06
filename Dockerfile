@@ -2,14 +2,32 @@ FROM haskell:8.6.5
 
 WORKDIR /usr/app
 
+# rust env vars
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
     RUST_VERSION=1.43.0
 
-RUN  apt-get update \
-  && apt-get install -y wget pkg-config libssl-dev
+# install stuff to install stuff
+RUN apt-get update \
+  && apt-get install -y \
+    wget \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates
 
+# add repo to get clang
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|apt-key add -
+RUN apt-add-repository "deb http://apt.llvm.org/stretch/ llvm-toolchain-stretch main"
+
+# install stuff. `clang` uses v11
+RUN apt-get update \
+  && apt-get install -y \ 
+    pkg-config \
+    libssl-dev \
+    clang
+
+# script taken from rust docker image
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
     case "${dpkgArch##*-}" in \
@@ -29,5 +47,3 @@ RUN set -eux; \
     rustup --version; \
     cargo --version; \
     rustc --version;
-
-RUN cargo install llvmenv
