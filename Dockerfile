@@ -8,7 +8,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
     RUST_VERSION=1.43.0
 
 RUN  apt-get update \
-  && apt-get install -y wget
+  && apt-get install -y wget pkg-config libssl-dev
 
 RUN set -eux; \
     dpkgArch="$(dpkg --print-architecture)"; \
@@ -29,3 +29,5 @@ RUN set -eux; \
     rustup --version; \
     cargo --version; \
     rustc --version;
+
+RUN cargo install llvmenv
