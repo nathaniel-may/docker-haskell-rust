@@ -1,6 +1,9 @@
-FROM haskell:8.6.5
+FROM haskell:8.8.3
 
 WORKDIR /usr/app
+
+# update to latest cabal (3.2 right now)
+RUN cabal new-update && cabal new-install cabal-install
 
 # rust env vars
 ENV RUSTUP_HOME=/usr/local/rustup \
@@ -47,6 +50,3 @@ RUN set -eux; \
     rustup --version; \
     cargo --version; \
     rustc --version;
-
-# update to latest cabal (3.2 right now)
-RUN cabal new-update && cabal new-install cabal-install
