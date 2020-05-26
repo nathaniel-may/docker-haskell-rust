@@ -47,3 +47,6 @@ RUN set -eux; \
     rustup --version; \
     cargo --version; \
     rustc --version;
+
+# update to latest cabal (3.2 right now)
+RUN cabal new-update && cabal new-install cabal-install
