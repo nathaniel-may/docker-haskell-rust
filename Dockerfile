@@ -41,20 +41,3 @@ RUN set -eux; \
     rustup --version; \
     cargo --version; \
     rustc --version;
-
-# -- cache compiled rust libraries in docker image --
-#                  -- HOT MESS --
-# create the directory where circleci checks out code
-# it will get overwritten but this just simulates the 
-# install of dependencies so that they can be cached
-# in the docker image. It's ugly I know, but CircleCI 
-# kills the build process so here we are.
-# 
-# [EDIT]: I haven't verified it yet but I think it's 
-# because CircleCI has a default to terminate if 
-# theres no output for 10 mins for any process.
-RUN mkdir -p /root/project/rust/src\
-  && cd /root/project/rust\
-  && echo '[package]\nname = "beep"\nversion = "0.1.0"\nedition = "2018"\n[dependencies]\nanyhow = "1.0"\nbytes = "0.5"\nfutures = "0.3"\nrocksdb = "0.14"\nserde = { version = "1.0", features = ["derive"] }\nserde_cbor = "0.11"\ntake_mut = "0.2"\ntokio = { version = "0.2", features = ["tcp", "rt-threaded", "stream"] }\ntokio-util = { version = "0.3", features = ["codec"] }' > Cargo.toml\
-  && echo 'fn main() { println!("Hello World!"); }' > src/main.rs\
-  && cargo build
